@@ -3,22 +3,34 @@ import createDataContext from '../context/createDataContext'
 const authReducer=(state,action)=>{
 
     switch(action.type){
-         case 'reset':
-             return {
-                 ...state,
-                 OTP:0
-             }
+        //  case 'reset':
+        //      return {
+        //          ...state,
+        //          OTP:0
+        //      }
 
-        case 'getOTPCorrect':
-            return {
+        // case 'getOTPCorrect'://OTP=2 is a flag for true
+        //     return {
+        //         ...state,
+        //         OTP:2
+        //     }
+        // case 'getOTPFalse'://OTP=1 is a flag for false
+        //     return {
+        //         ...state,
+        //         OTP:1
+        //     }
+        case 'getOTP':
+            return{
                 ...state,
-                OTP:2
+                isOTPCorrect:action.payload.isOTPCorrect
             }
-        case 'getOTPFalse':
-            return {
+
+        case 'hideshow':
+            return{
                 ...state,
-                OTP:1
+                isOTPCorrect:0
             }
+
         case 'deleteTestShow':
             return{
                 ...state,
@@ -61,6 +73,14 @@ const setEligibilty=dispatch=>{
     }
 }
 
+const hideshow=dispatch=>{
+    return()=>{
+        dispatch({type:'hideshow'})
+
+    }
+}
+
+
 const deleteTestShow=dispatch=>{
     return()=>{
         dispatch({type:'deleteTestShow'})
@@ -68,23 +88,38 @@ const deleteTestShow=dispatch=>{
     }
 }
 
-
+//1 true ,2 false
 const getOTP=dispatch=>{
     return(otp)=>{
-        const OTPFromApi="1234";
-        if(otp===OTPFromApi){
-            dispatch({type:'getOTPCorrect'})
+        const otpfromapi="1234";
+
+        if(otp===otpfromapi){
+            dispatch({type:'getOTP',payload:{isOTPCorrect:1}})
+            //navigate to FingerPrintScan Screen.
+        }if(otp!==otpfromapi){
+            dispatch({type:'getOTP',payload:{isOTPCorrect:2}})
         }
-        if(otp!==OTPFromApi){
-            dispatch({type:'getOTPFalse'})
-        }
-        if(otp===0){
-            dispatch({type:'reset'})
-        }
+
+
+
+
+        // const OTPFromApi="1234";
+        // if(otp===OTPFromApi){
+        //     dispatch({type:'getOTPCorrect'})
+        // }
+        // if(otp!==OTPFromApi){
+        //     dispatch({type:'getOTPFalse'})
+        // }
+        // if(otp===0){
+        //     dispatch({type:'reset'})
+        // }
 
        
     }
 }
+
+
+
 
 
 
@@ -133,9 +168,21 @@ const getNationalId=dispatch=>{
 
 
 
+//OTP:0
+
 export const {Provider,Context}=createDataContext(
     authReducer,
-    {getNationalId,setEligibilty,deleteTestShow,getOTP},
-    {isEligible:0,NationalId:'',voterData:[],errMsg:'',OTP:0}
+    {getNationalId,setEligibilty,deleteTestShow,getOTP,hideshow},
+    {isEligible:0,NationalId:'',voterData:[],errMsg:'',isOTPCorrect:0}
 
 )
+
+
+
+
+
+
+
+
+
+
