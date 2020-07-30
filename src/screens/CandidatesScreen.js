@@ -1,11 +1,17 @@
-import React from 'react';
-import {View,Text,StyleSheet} from 'react-native'
+import React from "react";
+import { View, Text, StyleSheet } from "react-native";
+import CandidatesList from "../Components/CandidatesList";
 
-
-const CandidatesScreen=()=>{
-    return <View>
-         <Text>Hello From Candidates</Text>
+const CandidatesScreen = ({ navigation }) => {
+  return (
+    <View>
+      <CandidatesList navigation={navigation} />
     </View>
-}
+  );
+};
+
+CandidatesScreen.navigationOptions = {
+  headerShown: false,
+};
 
 export default CandidatesScreen;

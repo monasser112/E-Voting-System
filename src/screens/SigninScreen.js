@@ -1,183 +1,135 @@
-import React,{useState,useContext,useEffect} from 'react';
-import {View,StyleSheet} from 'react-native'
-import {Button} from 'react-native-elements'
-import {Text} from 'react-native-elements'
-import { Input } from 'react-native-elements';
-import {NavigationEvents} from 'react-navigation';
-import {Context} from '../context/AuthContext'
-import {SimpleLineIcons} from '@expo/vector-icons';
-import {Feather} from '@expo/vector-icons';
+import React, { useState, useContext, useEffect } from "react";
+import { View, StyleSheet } from "react-native";
+import { Button } from "react-native-elements";
+import { Text } from "react-native-elements";
+import { Input } from "react-native-elements";
+import { NavigationEvents } from "react-navigation";
+import { Context } from "../context/AuthContext";
+import { SimpleLineIcons } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 
+const SigninScreen = ({ navigation }) => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-//ctrl+D find all references of a word 
+  const inputName = React.createRef();
+  const inputEmail = React.createRef();
+  const inputPassword = React.createRef();
 
-const SigninScreen=({navigation})=>{
-    
-   // const[correctID,setCorrectID]=useState(false);
-    const[InputNationalId,setInputNationalId]=useState('');//for text input
-    const[errMsg,seterrMsg]=useState('');
+  const { state, signin, signup } = useContext(Context);
 
-    const {state,getNationalId,setEligibilty,deleteTestShow}=useContext(Context);
+  const { isAuth, failAuth } = state;
 
-    const input = React.createRef();
-    
+  const Signin = () => {
+    signin({ name, email, password });
+    inputName.current.clear();
+    inputEmail.current.clear();
+    inputPassword.current.clear();
+  };
 
-    //input.current.focus()&&console.log('Hello rsd')
-
-    // useEffect(()=>{
-    //  getNationalId()
-    // },[]);
-
-   // const Id="1234567890";
-
-  
-   const checkYourEligibilty=(val)=>{
-     getNationalId(val);
-     setTimeout(() => {
-      deleteTestShow();
-          }, 5000);
-      input.current.clear();
-
-   }
-   
-
-    const resetState=()=>{
-        setInputNationalId('');
-        seterrMsg('');
-        setEligibilty(false);
-        
-
-    }
-
-    // const resetForm=()=>{
-    //     setInterval(() => {
-    //         seterrMsg('');
-    //     }, 5000);
-    // }
-
-    // errMsg&&resetForm()
-
-
-
-
-     
-
-    let testshow=null
-
-    if(state.isEligible===0){
-      testshow=<View></View>
-    }
-    if(state.isEligible===1){
-      testshow=<View style={{marginTop:150}}>
-      <View style={{marginVertical:20,flexDirection:'row',justifyContent:'flex-start'}}>
-      <SimpleLineIcons name='check' size={32} color='green'/>
-       <Text style={{fontSize:24,marginLeft:10,color:'green',fontWeight:'bold'}}>You are Elegible To Vote</Text>
-       
-
-     </View>
-     <Button
-         type='outline' 
-         title="Proceed" 
-         onPress={()=>navigation.navigate('OTP',{data:state.voterData})}
-         // buttonStyle={{marginTop:50}}
-      />
-           </View>
-    }
-
-    if(state.isEligible===2){
-      testshow=<View style={{marginTop:150}}>
-              <View style={{marginVertical:20,flexDirection:'row',justifyContent:'flex-start'}}>
-                <Feather name="x-circle" size={32} color='red'/>
-               
-                <Text style={{fontSize:24,marginLeft:10,color:'red',fontWeight:'bold'}}>Sorry! You are not Elegible To Vote</Text>
-              </View>
-          
-           </View>
-
-    }
-
-  //  const returnEligibleJsx=()=>{
-  //      return <View style={{marginTop:150}}>
-  //        <View style={{marginVertical:20,flexDirection:'row',justifyContent:'flex-start'}}>
-  //        <SimpleLineIcons name='check' size={32} color='green'/>
-  //         <Text style={{fontSize:24,marginLeft:20}}>You are Elegible To Vote</Text>
-          
-
-  //       </View>
-  //       <Button
-  //           type='outline' 
-  //           title="Proceed To FingerPrint Screen" 
-  //           onPress={()=>navigation.navigate('FingerPrint',{data:state.voterData})}
-  //           // buttonStyle={{marginTop:50}}
-  //        />
-  //             </View>
-  //      }
-   
-
-
-
-    return <View style={styles.container}>
-          <NavigationEvents
-            onWillBlur={()=>resetState()}
-          
-           />
-         <Text h3 h3Style={{paddingLeft:10,marginBottom:50}}>Please Enter Your National ID Number</Text>
-         <Input 
-           ref={input}
-           secureTextEntry
-           placeholder='Enter Your ID'
-           value={InputNationalId}//InputNationalId is what the user enters in the text field.
-           onChangeText={setInputNationalId}
-
-           />
-         <Button
-           type='outline' 
-           title="Check Your Eligibility" 
-          // onPress={InputNationalId===state.NationalId?()=>navigation.navigate('FingerPrint'):()=>seterrMsg('ID is InCorrect')}
-          onPress={()=>checkYourEligibilty(InputNationalId)}
-
-         /*
-         here we should call getNationalID('what the userenterd')
-         we shall pass whate the user entered.
-         
-         */ 
-           buttonStyle={{marginTop:50}}
-           />
-
-        {/* <Button
-           type='outline' 
-           title="test" 
-           onPress={()=>input.current.clear()}
-           buttonStyle={{marginTop:50}}
-
-           /> */}
-
-           {testshow}
-           
-        
-     
-
-
-            
-           {/* {state.isEligible?returnEligibleJsx():returnInEligibleJsx()} */}
-           {/* {state.isEligible&&console.log(state.voterData)} */}
-       
-           {/* <Text h4 h4Style={{color:'red'}}>{errMsg}</Text> */}
-          
+  const successSigninView = (
+    <View>
+      <SimpleLineIcons name="check" size={32} color="green" />
+      <Text>Successfull</Text>
     </View>
-}
+  );
 
-SigninScreen.navigationOptions={
-    headerShown:false
-}
-    
-const styles=StyleSheet.create({
-    container:{
-     
-     marginTop:50,
-     justifyContent:'flex-start'
-    }
-    
-})
+  return (
+    <View style={styles.container}>
+      <Text h3 h3Style={{ paddingLeft: 10, marginBottom: 50 }}>
+        Please Fill the Following Fields
+      </Text>
+      <Input
+        inputStyle={{ marginVertical: 10 }}
+        ref={inputName}
+        placeholder="Enter Your Name"
+        value={name} //InputNationalId is what the user enters in the text field.
+        onChangeText={setName}
+        leftIcon={<AntDesign name="user" size={24} color="black" />}
+      />
+      <Input
+        inputStyle={{ marginVertical: 10 }}
+        ref={inputEmail}
+        placeholder="Enter Your Email"
+        value={email} //InputNationalId is what the user enters in the text field.
+        onChangeText={setEmail}
+        leftIcon={<MaterialIcons name="email" size={24} color="black" />}
+      />
+      <Input
+        inputStyle={{ marginVertical: 10 }}
+        ref={inputPassword}
+        secureTextEntry
+        placeholder="Enter Your Password"
+        value={password} //InputNationalId is what the user enters in the text field.
+        onChangeText={setPassword}
+        leftIcon={<AntDesign name="lock" size={24} color="black" />}
+      />
+
+      <Button
+        type="clear"
+        title="Sign In"
+        onPress={() => Signin()}
+        buttonStyle={{ marginTop: 50 }}
+      />
+
+      {isAuth !== "" && (
+        <View
+          style={{
+            marginVertical: 20,
+            flexDirection: "row",
+            justifyContent: "center",
+          }}
+        >
+          <SimpleLineIcons name="check" size={28} color="green" />
+          <Text
+            style={{
+              fontSize: 24,
+              marginLeft: 10,
+              color: "green",
+              fontWeight: "bold",
+            }}
+          >
+            Successfull
+          </Text>
+        </View>
+      )}
+      {failAuth && (
+        <View
+          style={{
+            marginVertical: 20,
+            flexDirection: "row",
+            justifyContent: "flex-start",
+          }}
+        >
+          <Feather name="x-circle" size={28} color="red" />
+          <Text
+            style={{
+              fontSize: 24,
+              marginLeft: 10,
+              color: "red",
+              fontWeight: "bold",
+            }}
+          >
+            UnSuccessfull!Try Again
+          </Text>
+        </View>
+      )}
+    </View>
+  );
+};
+
+SigninScreen.navigationOptions = {
+  headerShown: false,
+};
+
+const styles = StyleSheet.create({
+  container: {
+    marginTop: 50,
+    justifyContent: "flex-start",
+  },
+});
 
 export default SigninScreen;
